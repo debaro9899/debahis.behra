@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import EngineeringJourney from './components/EngineeringJourney';
@@ -14,6 +14,13 @@ import RecruiterModal from './components/RecruiterModal';
 
 function App() {
   const [recruiterMode, setRecruiterMode] = useState(false);
+
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
 
   return (
     <div className="min-h-screen relative" style={{ background: 'var(--bg-primary)' }}>

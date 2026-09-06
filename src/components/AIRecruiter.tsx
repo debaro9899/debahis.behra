@@ -103,11 +103,18 @@ const AIRecruiter: React.FC = () => {
   }]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages, isTyping]);
 
   const sendMessage = (text: string) => {
@@ -145,12 +152,11 @@ const AIRecruiter: React.FC = () => {
           </div>
 
           {/* Messages */}
-          <div className="overflow-y-auto px-4 pt-4 pb-2" style={{ maxHeight: '400px', scrollbarWidth: 'thin' }}>
+          <div ref={chatContainerRef} className="overflow-y-auto px-4 pt-4 pb-2" style={{ maxHeight: '400px', scrollbarWidth: 'thin' }}>
             <AnimatePresence initial={false}>
               {messages.map(msg => <ChatBubble key={msg.id} message={msg} />)}
               {isTyping && <TypingIndicator key="typing" />}
             </AnimatePresence>
-            <div ref={bottomRef} />
           </div>
 
           {/* Suggested chips */}

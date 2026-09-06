@@ -95,12 +95,12 @@ export default function FloatingChatbot() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Auto scroll when messages change
-    if (isOpen) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Auto scroll internal container only when open
+    if (isOpen && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages, isTyping, isOpen]);
 
@@ -215,7 +215,7 @@ export default function FloatingChatbot() {
             </div>
 
             {/* Message Area */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs leading-relaxed">
+            <div ref={chatContainerRef} className="flex-1 p-4 overflow-y-auto space-y-3 text-xs leading-relaxed">
               {messages.map((m) => (
                 <div
                   key={m.id}
@@ -246,7 +246,6 @@ export default function FloatingChatbot() {
                   <span className="ml-1 text-[11px] text-gray-400">Analyzing engineering background...</span>
                 </div>
               )}
-              <div ref={bottomRef} />
             </div>
 
             {/* Quick Prompt Chips */}
